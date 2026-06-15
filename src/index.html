@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MemoryOS</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+
+  <!-- 侧边导航 -->
+  <nav class="sidebar">
+    <div class="logo">
+      <span class="logo-mark">M</span>
+      <span class="logo-text">MemoryOS</span>
+    </div>
+    <ul class="nav-list">
+      <li class="nav-item active" data-page="gallery">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        <span>照片</span>
+      </li>
+      <li class="nav-item" data-page="upload">
+        <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+        <span>上传</span>
+      </li>
+      <li class="nav-item" data-page="review">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>误判</span>
+      </li>
+      <li class="nav-item" data-page="logs">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <span>日志</span>
+      </li>
+      <li class="nav-item" data-page="settings">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>设置</span>
+      </li>
+    </ul>
+
+    <!-- 底部状态指示 -->
+    <div class="sidebar-status">
+      <div class="status-dot" id="statusDot"></div>
+      <span id="statusText">加载中...</span>
+    </div>
+  </nav>
+
+  <!-- 主内容区 -->
+  <main class="main">
+
+    <!-- 照片网格页 -->
+    <section class="page active" id="page-gallery">
+      <header class="page-header">
+        <h1>我的照片</h1>
+        <div class="header-actions">
+          <span class="photo-count" id="photoCount">—</span>
+          <button class="btn-primary" id="btnToggleWatcher">启动监听</button>
+        </div>
+      </header>
+      <div class="gallery-grid" id="galleryGrid">
+        <div class="empty-state" id="galleryEmpty">
+          <p>把照片放入 inbox 文件夹，启动监听后自动处理</p>
+        </div>
+      </div>
+      <div class="load-more" id="loadMore" style="display:none">
+        <button class="btn-ghost" id="btnLoadMore">加载更多</button>
+      </div>
+    </section>
+
+    <!-- 上传页 -->
+    <section class="page" id="page-upload">
+      <header class="page-header">
+        <h1>上传照片</h1>
+      </header>
+      <div class="upload-zone" id="uploadZone">
+        <svg viewBox="0 0 24 24" width="48" height="48"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+        <p>拖拽照片到这里，或点击选择</p>
+        <input type="file" id="fileInput" multiple accept="image/*" style="display:none">
+        <button class="btn-primary" id="btnSelectFiles">选择照片</button>
+      </div>
+      <div class="upload-list" id="uploadList"></div>
+    </section>
+
+    <!-- 误判修正页 -->
+    <section class="page" id="page-review">
+      <header class="page-header">
+        <h1>误判修正</h1>
+        <p class="page-desc">这里是被忽略的照片，如果发现有你的照片，点击「移到保留」</p>
+      </header>
+      <div class="gallery-grid" id="reviewGrid">
+        <div class="empty-state" id="reviewEmpty"><p>没有被忽略的照片</p></div>
+      </div>
+    </section>
+
+    <!-- 日志页 -->
+    <section class="page" id="page-logs">
+      <header class="page-header">
+        <h1>处理日志</h1>
+        <button class="btn-ghost" id="btnRefreshLogs">刷新</button>
+      </header>
+      <div class="log-list" id="logList"></div>
+    </section>
+
+    <!-- 设置页 -->
+    <section class="page" id="page-settings">
+      <header class="page-header"><h1>设置</h1></header>
+      <div class="settings-form">
+        <div class="setting-group">
+          <label>识别阈值</label>
+          <p class="setting-desc">0~1 之间，越高越严格。建议 0.75~0.85。</p>
+          <input type="number" id="settingThreshold" min="0.1" max="0.99" step="0.01">
+        </div>
+        <div class="setting-group">
+          <label>Face++ API Key</label>
+          <input type="text" id="settingApiKey" placeholder="留空则不修改">
+        </div>
+        <div class="setting-group">
+          <label>Face++ API Secret</label>
+          <input type="text" id="settingApiSecret" placeholder="留空则不修改">
+        </div>
+        <div class="setting-group">
+          <label>定时扫描目录</label>
+          <p class="setting-desc">留空则不启用定时扫描</p>
+          <input type="text" id="settingScanDir" placeholder="/path/to/photos">
+        </div>
+        <div class="setting-group">
+          <label>扫描间隔（分钟）</label>
+          <input type="number" id="settingInterval" min="5" max="1440">
+        </div>
+        <button class="btn-primary" id="btnSaveSettings">保存设置</button>
+        <p class="save-msg" id="saveMsg"></p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 灯箱（全屏查看照片） -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose">✕</button>
+    <button class="lightbox-prev" id="lightboxPrev">‹</button>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <button class="lightbox-next" id="lightboxNext">›</button>
+  </div>
+
+  <!-- 实时进度提示 -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
